@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hyped Feed Editor</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0f;
+      --bg-card: #16161a;
+      --bg-card-hover: #1c1c22;
+      --bg-input: #1e1e26;
+      --bg-modal: #121216;
+      --border: #2a2a35;
+      --border-focus: #5a5a7a;
+      --text: #e8e8f0;
+      --text-muted: #8888a8;
+      --text-dim: #55556a;
+      --accent: #7c6af5;
+      --accent-hover: #9180f7;
+      --danger: #e05555;
+      --danger-hover: #ec6666;
+      --success: #55c87a;
+
+      --cat-game: #9b59f5;
+      --cat-sports: #22d3ee;
+      --cat-premiere: #f472b6;
+      --cat-music: #fb923c;
+      --cat-concert: #fbbf24;
+      --cat-milestone: #4ade80;
+
+      --radius: 10px;
+      --radius-sm: 6px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 14px;
+    }
+
+    /* ── Header ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(13,13,15,0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: var(--text);
+      flex-shrink: 0;
+    }
+
+    .logo span { color: var(--accent); }
+
+    .meta-badges {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .badge {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .badge.accent { border-color: var(--accent); color: var(--accent); }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    /* ── Buttons ── */
+    button {
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+      padding: 7px 14px;
+      transition: background 0.15s, opacity 0.15s, transform 0.1s;
+    }
+
+    button:active:not(:disabled) { transform: scale(0.97); }
+    button:disabled { opacity: 0.38; cursor: not-allowed; }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .btn-ghost:hover:not(:disabled) { background: var(--bg-card); color: var(--text); }
+
+    .btn-danger {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--danger);
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+    .btn-danger:hover:not(:disabled) { background: rgba(224,85,85,0.12); }
+
+    .btn-icon {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 5px 9px;
+      font-size: 13px;
+      line-height: 1;
+    }
+    .btn-icon:hover:not(:disabled) { background: var(--bg-card); color: var(--text); }
+
+    /* ── Main ── */
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+
+    /* ── Empty state ── */
+    #empty-state {
+      text-align: center;
+      padding: 96px 24px;
+    }
+
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+
+    #empty-state h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    #empty-state p {
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      font-size: 14px;
+    }
+
+    /* ── Timer list ── */
+    #timers-section { display: none; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .section-header h2 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 11px;
+    }
+
+    #timer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* ── Timer card ── */
+    .timer-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: 28px 8px 1fr auto;
+      gap: 0 12px;
+      align-items: center;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .timer-card:hover { background: var(--bg-card-hover); border-color: #3a3a48; }
+
+    .card-order {
+      font-size: 12px;
+      color: var(--text-dim);
+      font-weight: 600;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cat-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .card-body { min-width: 0; }
+
+    .card-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .live-badge {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(224,85,85,0.18);
+      color: #fc7a7a;
+      border: 1px solid rgba(224,85,85,0.35);
+      border-radius: 4px;
+      padding: 2px 6px;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .cat-badge {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .card-date { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    .card-tz   { font-size: 11px; color: var(--text-dim); }
+    .card-notes { font-size: 12px; color: var(--text-muted); margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .reorder-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .btn-reorder {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      padding: 2px 5px;
+      font-size: 11px;
+      border-radius: 4px;
+      line-height: 1;
+    }
+    .btn-reorder:hover:not(:disabled) { background: var(--bg-input); color: var(--text-muted); }
+
+    /* ── Modal ── */
+    #modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    #modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--bg-modal);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 540px;
+      max-height: 90vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: var(--bg-modal);
+      z-index: 1;
+    }
+
+    .modal-header h3 { font-size: 16px; font-weight: 600; }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 18px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      line-height: 1;
+    }
+    .modal-close:hover { background: var(--bg-input); color: var(--text); }
+
+    .modal-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+
+    .modal-footer {
+      padding: 16px 24px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      position: sticky;
+      bottom: 0;
+      background: var(--bg-modal);
+    }
+
+    /* ── Form ── */
+    .form-row { display: grid; gap: 12px; }
+    .form-row.cols-2 { grid-template-columns: 1fr 1fr; }
+    .form-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+
+    label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+
+    input[type="text"],
+    input[type="url"],
+    input[type="date"],
+    input[type="time"],
+    select,
+    textarea {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 13px;
+      padding: 9px 12px;
+      width: 100%;
+      transition: border-color 0.15s;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--border-focus);
+    }
+
+    input::placeholder, textarea::placeholder { color: var(--text-dim); }
+
+    select { cursor: pointer; }
+    select option { background: #1e1e26; }
+
+    textarea { resize: vertical; min-height: 72px; }
+
+    /* Color scheme inputs */
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="time"]::-webkit-calendar-picker-indicator {
+      filter: invert(0.6);
+      cursor: pointer;
+    }
+
+    /* ── Toggle ── */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+    }
+
+    .toggle-label { font-size: 13px; color: var(--text); }
+    .toggle-sub   { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+    .toggle {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    .toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      background: var(--border);
+      border-radius: 999px;
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+
+    .toggle-thumb {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.2s;
+      pointer-events: none;
+    }
+
+    .toggle input:checked ~ .toggle-track { background: var(--success); }
+    .toggle input:checked ~ .toggle-thumb { transform: translateX(18px); }
+
+    /* ── Notification toast ── */
+    #toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #22222e;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 13px;
+      color: var(--text);
+      z-index: 200;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    #toast.success { border-color: var(--success); color: var(--success); }
+    #toast.error   { border-color: var(--danger);  color: var(--danger); }
+
+    /* ── Delete confirm inline ── */
+    .delete-confirm {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .delete-confirm.visible { display: flex; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--border-focus); }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="logo">Hyped <span>Feed</span></div>
+  <div class="meta-badges" id="meta-badges" style="display:none">
+    <span class="badge accent" id="badge-version"></span>
+    <span class="badge" id="badge-updated"></span>
+    <span class="badge" id="badge-count"></span>
+  </div>
+  <div class="header-actions">
+    <button class="btn-ghost" id="btn-open">Open JSON</button>
+    <button class="btn-primary" id="btn-save" disabled>Save JSON</button>
+  </div>
+</header>
+
+<!-- Main -->
+<main>
+  <!-- Empty state -->
+  <div id="empty-state">
+    <div class="empty-icon">📋</div>
+    <h2 id="empty-title">No file loaded</h2>
+    <p id="empty-sub">Open your <code>featured.json</code> to start editing.</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn-primary" id="btn-resume" style="display:none">Reload featured.json</button>
+      <button class="btn-primary" id="btn-open-cta">Open JSON</button>
+    </div>
+  </div>
+
+  <!-- Timers section -->
+  <div id="timers-section">
+    <div class="section-header">
+      <h2>Featured Timers</h2>
+      <button class="btn-primary" id="btn-add">+ Add Timer</button>
+    </div>
+    <div id="timer-list"></div>
+  </div>
+</main>
+
+<!-- Modal -->
+<div id="modal-overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-header">
+      <h3 id="modal-title">Add Timer</h3>
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="field">
+          <label for="f-name">Name</label>
+          <input type="text" id="f-name" placeholder="e.g. GTA VI Launch" autocomplete="off" />
+        </div>
+      </div>
+      <div class="form-row cols-2">
+        <div class="field">
+          <label for="f-id">ID Slug</label>
+          <input type="text" id="f-id" placeholder="auto-generated" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label for="f-category">Category</label>
+          <select id="f-category">
+            <option value="GAME">GAME</option>
+            <option value="SPORTS">SPORTS</option>
+            <option value="PREMIERE">PREMIERE</option>
+            <option value="MUSIC">MUSIC</option>
+            <option value="CONCERT">CONCERT</option>
+            <option value="MILESTONE">MILESTONE</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row cols-3">
+        <div class="field" style="grid-column: span 2">
+          <label for="f-date">Date</label>
+          <input type="date" id="f-date" />
+        </div>
+        <div class="field">
+          <label for="f-time">Time</label>
+          <input type="time" id="f-time" value="00:00" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label for="f-timezone">Timezone</label>
+          <select id="f-timezone"></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label for="f-notes">Notes</label>
+          <textarea id="f-notes" placeholder="Short description or tagline"></textarea>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label for="f-image">Image URL <span style="color:var(--text-dim);font-size:10px;text-transform:none">(optional)</span></label>
+          <input type="url" id="f-image" placeholder="https://..." />
+        </div>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Live Event</div>
+          <div class="toggle-sub">Mark as currently live / ongoing</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="f-live" />
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" id="modal-cancel">Cancel</button>
+      <button class="btn-primary" id="modal-save">Save Timer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+// ── Constants ──────────────────────────────────────────────────────────────
+
+const CAT_COLORS = {
+  GAME:      '#9b59f5',
+  SPORTS:    '#22d3ee',
+  PREMIERE:  '#f472b6',
+  MUSIC:     '#fb923c',
+  CONCERT:   '#fbbf24',
+  MILESTONE: '#4ade80',
+};
+
+const CAT_BG = {
+  GAME:      'rgba(155,89,245,0.15)',
+  SPORTS:    'rgba(34,211,238,0.15)',
+  PREMIERE:  'rgba(244,114,182,0.15)',
+  MUSIC:     'rgba(251,146,60,0.15)',
+  CONCERT:   'rgba(251,191,36,0.15)',
+  MILESTONE: 'rgba(74,222,128,0.15)',
+};
+
+const TIMEZONES = [
+  'Pacific/Honolulu','America/Anchorage','America/Los_Angeles','America/Denver',
+  'America/Chicago','America/New_York','America/Sao_Paulo','Atlantic/Azores',
+  'Europe/London','Europe/Paris','Europe/Berlin','Europe/Helsinki',
+  'Europe/Moscow','Asia/Dubai','Asia/Kolkata','Asia/Dhaka',
+  'Asia/Bangkok','Asia/Shanghai','Asia/Tokyo','Asia/Seoul',
+  'Australia/Sydney','Pacific/Auckland',
+];
+
+// ── State ──────────────────────────────────────────────────────────────────
+
+let feedData = null;
+let fileHandle = null;
+let editingIndex = -1;
+let idManuallyEdited = false;
+let pendingDeleteIndex = -1;
+
+// ── DOM refs ───────────────────────────────────────────────────────────────
+
+const elEmpty       = document.getElementById('empty-state');
+const elSection     = document.getElementById('timers-section');
+const elList        = document.getElementById('timer-list');
+const elMetaBadges  = document.getElementById('meta-badges');
+const elBadgeVer    = document.getElementById('badge-version');
+const elBadgeUpd    = document.getElementById('badge-updated');
+const elBadgeCount  = document.getElementById('badge-count');
+const elBtnOpen     = document.getElementById('btn-open');
+const elBtnOpenCta  = document.getElementById('btn-open-cta');
+const elBtnSave     = document.getElementById('btn-save');
+const elBtnAdd      = document.getElementById('btn-add');
+const elOverlay     = document.getElementById('modal-overlay');
+const elModalTitle  = document.getElementById('modal-title');
+const elModalSave   = document.getElementById('modal-save');
+const elModalCancel = document.getElementById('modal-cancel');
+const elModalClose  = document.getElementById('modal-close');
+const elToast       = document.getElementById('toast');
+
+const fName     = document.getElementById('f-name');
+const fId       = document.getElementById('f-id');
+const fCategory = document.getElementById('f-category');
+const fDate     = document.getElementById('f-date');
+const fTime     = document.getElementById('f-time');
+const fTimezone = document.getElementById('f-timezone');
+const fNotes    = document.getElementById('f-notes');
+const fImage    = document.getElementById('f-image');
+const fLive     = document.getElementById('f-live');
+
+// ── Populate timezone select ────────────────────────────────────────────────
+
+TIMEZONES.forEach(tz => {
+  const opt = document.createElement('option');
+  opt.value = tz;
+  opt.textContent = tz;
+  fTimezone.appendChild(opt);
+});
+
+// ── Toast ──────────────────────────────────────────────────────────────────
+
+let toastTimer = null;
+
+function showToast(msg, type = 'default') {
+  elToast.textContent = msg;
+  elToast.className = 'show' + (type !== 'default' ? ' ' + type : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { elToast.className = ''; }, 2800);
+}
+
+// ── Timezone helpers ───────────────────────────────────────────────────────
+
+function localToUtcMs(dateStr, timeStr, tz) {
+  // Iterative approach to handle DST edge cases (3 iterations)
+  const naive = dateStr + 'T' + timeStr + ':00';
+  let probe = new Date(naive).getTime();
+
+  for (let i = 0; i < 3; i++) {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: tz,
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit',
+      hour12: false,
+    }).formatToParts(new Date(probe));
+
+    const get = type => parts.find(p => p.type === type)?.value ?? '00';
+    const localStr = `${get('year')}-${get('month')}-${get('day')}T${get('hour') === '24' ? '00' : get('hour')}:${get('minute')}:${get('second')}`;
+    const diff = new Date(naive).getTime() - new Date(localStr).getTime();
+    probe += diff;
+  }
+
+  return probe;
+}
+
+function utcMsToLocalParts(tsMs, tz) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: tz,
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit',
+    hour12: false,
+  }).formatToParts(new Date(tsMs));
+
+  const get = type => parts.find(p => p.type === type)?.value ?? '00';
+  const hour = get('hour') === '24' ? '00' : get('hour');
+  return {
+    date: `${get('year')}-${get('month')}-${get('day')}`,
+    time: `${hour}:${get('minute')}`,
+  };
+}
+
+function formatDisplayDate(tsMs, tz) {
+  return new Intl.DateTimeFormat('en-GB', {
+    timeZone: tz,
+    day: '2-digit', month: 'short', year: 'numeric',
+    hour: '2-digit', minute: '2-digit', hour12: false,
+  }).format(new Date(tsMs));
+}
+
+// ── Slug helper ────────────────────────────────────────────────────────────
+
+function toSlug(str) {
+  return str.toLowerCase().trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .slice(0, 60);
+}
+
+// ── Today's date ───────────────────────────────────────────────────────────
+
+function todayIso() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+// ── Render ─────────────────────────────────────────────────────────────────
+
+function updateMeta() {
+  if (!feedData) return;
+  elBadgeVer.textContent   = `v${feedData.version}`;
+  elBadgeUpd.textContent   = feedData.updated_at;
+  elBadgeCount.textContent = `${feedData.timers.length} timers`;
+}
+
+function renderList() {
+  elList.innerHTML = '';
+  feedData.timers.forEach((t, i) => {
+    const color  = CAT_COLORS[t.category] ?? '#888';
+    const catBg  = CAT_BG[t.category]    ?? 'rgba(136,136,136,0.15)';
+    const total  = feedData.timers.length;
+    const display = formatDisplayDate(t.target_timestamp, t.target_timezone);
+
+    const card = document.createElement('div');
+    card.className = 'timer-card';
+    card.innerHTML = `
+      <div class="card-order">${i + 1}</div>
+      <div class="cat-dot" style="background:${color}"></div>
+      <div class="card-body">
+        <div class="card-name">
+          ${escHtml(t.name)}
+          ${t.is_live_event ? '<span class="live-badge">LIVE</span>' : ''}
+        </div>
+        <div class="card-meta">
+          <span class="cat-badge" style="background:${catBg};color:${color}">${t.category}</span>
+          <span class="card-date">${display}</span>
+          <span class="card-tz">${t.target_timezone}</span>
+        </div>
+        ${t.notes ? `<div class="card-notes">${escHtml(t.notes)}</div>` : ''}
+      </div>
+      <div class="card-actions">
+        <div class="reorder-group">
+          <button class="btn-reorder" data-action="up" data-i="${i}" ${i === 0 ? 'disabled' : ''} title="Move up">▲</button>
+          <button class="btn-reorder" data-action="down" data-i="${i}" ${i === total - 1 ? 'disabled' : ''} title="Move down">▼</button>
+        </div>
+        <button class="btn-icon" data-action="edit" data-i="${i}" title="Edit">Edit</button>
+        <button class="btn-danger" data-action="delete" data-i="${i}" title="Delete">Delete</button>
+      </div>
+    `;
+    elList.appendChild(card);
+  });
+}
+
+function render() {
+  if (!feedData) {
+    elEmpty.style.display   = '';
+    elSection.style.display = 'none';
+    elMetaBadges.style.display = 'none';
+    elBtnSave.disabled = true;
+    return;
+  }
+  elEmpty.style.display   = 'none';
+  elSection.style.display = 'block';
+  elMetaBadges.style.display = 'flex';
+  elBtnSave.disabled = false;
+  updateMeta();
+  renderList();
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// ── IndexedDB handle persistence ───────────────────────────────────────────
+
+const DB_NAME  = 'hyped-feed-editor';
+const DB_STORE = 'handles';
+const DB_KEY   = 'featured-json';
+
+function openDb() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = () => req.result.createObjectStore(DB_STORE);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror   = () => reject(req.error);
+  });
+}
+
+async function saveHandleToDb(handle) {
+  const db = await openDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, 'readwrite');
+    tx.objectStore(DB_STORE).put(handle, DB_KEY);
+    tx.oncomplete = resolve;
+    tx.onerror    = () => reject(tx.error);
+  });
+}
+
+async function loadHandleFromDb() {
+  const db = await openDb();
+  return new Promise((resolve, reject) => {
+    const tx  = db.transaction(DB_STORE, 'readonly');
+    const req = tx.objectStore(DB_STORE).get(DB_KEY);
+    req.onsuccess = () => resolve(req.result ?? null);
+    req.onerror   = () => reject(req.error);
+  });
+}
+
+// ── File I/O ───────────────────────────────────────────────────────────────
+
+async function loadFromHandle(handle) {
+  const file = await handle.getFile();
+  const text = await file.text();
+  feedData   = JSON.parse(text);
+  fileHandle = handle;
+  render();
+}
+
+async function initAutoLoad() {
+  if (!window.showOpenFilePicker) return;
+  try {
+    const handle = await loadHandleFromDb();
+    if (!handle) return;
+    const permission = await handle.queryPermission({ mode: 'readwrite' });
+    if (permission === 'granted') {
+      await loadFromHandle(handle);
+      showToast('featured.json loaded', 'success');
+    } else {
+      // Can't call requestPermission without a user gesture — show resume button instead
+      const elResume = document.getElementById('btn-resume');
+      elResume.style.display = '';
+      document.getElementById('btn-open-cta').className = 'btn-ghost';
+      document.getElementById('empty-title').textContent = 'featured.json needs access';
+      document.getElementById('empty-sub').textContent   = 'Grant permission to reload the file, or pick it again.';
+      elResume.addEventListener('click', async () => {
+        try {
+          const granted = await handle.requestPermission({ mode: 'readwrite' });
+          if (granted === 'granted') {
+            await loadFromHandle(handle);
+            showToast('featured.json loaded', 'success');
+          }
+        } catch (err) {
+          showToast('Permission denied', 'error');
+        }
+      });
+    }
+  } catch {
+    // silently fall through to empty state
+  }
+}
+
+async function openFile() {
+  if (!window.showOpenFilePicker) {
+    showToast('File System Access API not supported in this browser', 'error');
+    return;
+  }
+  try {
+    const [handle] = await window.showOpenFilePicker({
+      types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }],
+    });
+    await loadFromHandle(handle);
+    await saveHandleToDb(handle);
+    showToast('File loaded', 'success');
+  } catch (err) {
+    if (err.name !== 'AbortError') showToast('Failed to open file: ' + err.message, 'error');
+  }
+}
+
+async function saveFile() {
+  if (!fileHandle || !feedData) return;
+  try {
+    feedData.updated_at = todayIso();
+    const writable = await fileHandle.createWritable();
+    await writable.write(JSON.stringify(feedData, null, 2));
+    await writable.close();
+    updateMeta();
+    showToast('Saved ✓', 'success');
+  } catch (err) {
+    showToast('Save failed: ' + err.message, 'error');
+  }
+}
+
+// ── Modal ──────────────────────────────────────────────────────────────────
+
+function openModal(index) {
+  editingIndex = index;
+  idManuallyEdited = false;
+
+  if (index === -1) {
+    elModalTitle.textContent = 'Add Timer';
+    fName.value    = '';
+    fId.value      = '';
+    fCategory.value = 'GAME';
+    fDate.value    = '';
+    fTime.value    = '00:00';
+    fTimezone.value = 'America/New_York';
+    fNotes.value   = '';
+    fImage.value   = '';
+    fLive.checked  = false;
+  } else {
+    const t = feedData.timers[index];
+    const { date, time } = utcMsToLocalParts(t.target_timestamp, t.target_timezone);
+    elModalTitle.textContent = 'Edit Timer';
+    fName.value    = t.name;
+    fId.value      = t.id;
+    fCategory.value = t.category;
+    fDate.value    = date;
+    fTime.value    = time;
+    fTimezone.value = TIMEZONES.includes(t.target_timezone) ? t.target_timezone : TIMEZONES[0];
+    fNotes.value   = t.notes ?? '';
+    fImage.value   = t.image_url ?? '';
+    fLive.checked  = !!t.is_live_event;
+    idManuallyEdited = true;
+  }
+
+  elOverlay.classList.add('open');
+  fName.focus();
+}
+
+function closeModal() {
+  elOverlay.classList.remove('open');
+}
+
+function saveTimer() {
+  const name = fName.value.trim();
+  if (!name) { showToast('Name is required', 'error'); fName.focus(); return; }
+
+  const dateStr = fDate.value;
+  const timeStr = fTime.value || '00:00';
+  if (!dateStr) { showToast('Date is required', 'error'); fDate.focus(); return; }
+
+  const tz = fTimezone.value;
+  const tsMs = localToUtcMs(dateStr, timeStr, tz);
+
+  if (isNaN(tsMs)) { showToast('Invalid date/time', 'error'); return; }
+
+  const slug = fId.value.trim() || toSlug(name);
+
+  const timer = {
+    id: slug,
+    name,
+    target_timestamp: tsMs,
+    category: fCategory.value,
+    image_url: fImage.value.trim() || null,
+    notes: fNotes.value.trim(),
+    target_timezone: tz,
+    is_live_event: fLive.checked ? 1 : 0,
+  };
+
+  if (editingIndex === -1) {
+    feedData.timers.push(timer);
+  } else {
+    feedData.timers[editingIndex] = timer;
+  }
+
+  closeModal();
+  render();
+  showToast(editingIndex === -1 ? 'Timer added' : 'Timer updated', 'success');
+}
+
+// ── Event listeners ────────────────────────────────────────────────────────
+
+elBtnOpen.addEventListener('click', openFile);
+elBtnOpenCta.addEventListener('click', openFile);
+elBtnSave.addEventListener('click', saveFile);
+elBtnAdd.addEventListener('click', () => openModal(-1));
+
+elModalSave.addEventListener('click', saveTimer);
+elModalCancel.addEventListener('click', closeModal);
+elModalClose.addEventListener('click', closeModal);
+
+elOverlay.addEventListener('click', e => {
+  if (e.target === elOverlay) closeModal();
+});
+
+// Auto-generate ID slug from name unless manually edited
+fName.addEventListener('input', () => {
+  if (!idManuallyEdited) fId.value = toSlug(fName.value);
+});
+
+fId.addEventListener('input', () => {
+  idManuallyEdited = fId.value.trim() !== '';
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+    e.preventDefault();
+    if (!elBtnSave.disabled) saveFile();
+  }
+  if (e.key === 'Escape' && elOverlay.classList.contains('open')) {
+    closeModal();
+  }
+  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && elOverlay.classList.contains('open')) {
+    saveTimer();
+  }
+});
+
+// Timer list actions (event delegation)
+elList.addEventListener('click', e => {
+  const btn = e.target.closest('button[data-action]');
+  if (!btn) return;
+
+  const action = btn.dataset.action;
+  const i = parseInt(btn.dataset.i, 10);
+
+  if (action === 'edit') {
+    openModal(i);
+  } else if (action === 'up') {
+    if (i > 0) {
+      [feedData.timers[i - 1], feedData.timers[i]] = [feedData.timers[i], feedData.timers[i - 1]];
+      render();
+    }
+  } else if (action === 'down') {
+    if (i < feedData.timers.length - 1) {
+      [feedData.timers[i], feedData.timers[i + 1]] = [feedData.timers[i + 1], feedData.timers[i]];
+      render();
+    }
+  } else if (action === 'delete') {
+    if (pendingDeleteIndex === i) {
+      feedData.timers.splice(i, 1);
+      pendingDeleteIndex = -1;
+      render();
+      showToast('Timer deleted');
+    } else {
+      pendingDeleteIndex = i;
+      btn.textContent = 'Confirm?';
+      btn.style.color = 'var(--danger)';
+      btn.style.background = 'rgba(224,85,85,0.12)';
+      setTimeout(() => {
+        pendingDeleteIndex = -1;
+        if (btn.isConnected) {
+          btn.textContent = 'Delete';
+          btn.style.color = '';
+          btn.style.background = '';
+        }
+      }, 2500);
+    }
+  }
+});
+
+// ── Init ───────────────────────────────────────────────────────────────────
+
+render();
+initAutoLoad();
+</script>
+</body>
+</html>
