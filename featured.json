@@ -1,13 +1,13 @@
 {
-  "version": 1,
+  "version": 2,
   "updated_at": "2026-02-23",
   "timers": [
     {
       "id": "gta-vi-global-launch",
       "name": "GTA VI Global Launch",
-      "target_timestamp": 1751328000000,
+      "target_timestamp": 1795093560000,
       "category": "GAME",
-      "image_url": null,
+      "image_url": "https://gaming-cdn.com/images/products/2462/orig/grand-theft-auto-vi-pc-rockstar-cover.jpg?v=1762511430",
       "notes": "The most anticipated game release of the decade",
       "target_timezone": "America/New_York",
       "is_live_event": 0
@@ -17,27 +17,27 @@
       "name": "World Cup 2026 Final",
       "target_timestamp": 1782604800000,
       "category": "SPORTS",
-      "image_url": null,
+      "image_url": "https://www.cancunairporttransportations.com/blog/wp-content/uploads/FIFA-world-cup-2026-752x440.webp",
       "notes": "The biggest match in world football",
       "target_timezone": "America/New_York",
-      "is_live_event": 1
+      "is_live_event": 0
     },
     {
       "id": "super-bowl-2027",
       "name": "Super Bowl LXI",
       "target_timestamp": 1802217600000,
       "category": "SPORTS",
-      "image_url": null,
+      "image_url": "https://pbs.twimg.com/media/GBQrQfDbAAAH7yf.jpg",
       "notes": "Halftime show. Commercials. History.",
       "target_timezone": "America/New_York",
-      "is_live_event": 1
+      "is_live_event": 0
     },
     {
       "id": "avengers-secret-wars",
       "name": "Avengers: Secret Wars",
       "target_timestamp": 1810512000000,
       "category": "PREMIERE",
-      "image_url": null,
+      "image_url": "https://cdn.marvel.com/content/2x/avengerssecretwars_lob_mas_mob_02.jpg",
       "notes": "Marvel's ultimate crossover event",
       "target_timezone": "America/New_York",
       "is_live_event": 0
@@ -45,9 +45,9 @@
     {
       "id": "the-batman-part-ii",
       "name": "The Batman Part II",
-      "target_timestamp": 1766620800000,
+      "target_timestamp": 1822392360000,
       "category": "PREMIERE",
-      "image_url": null,
+      "image_url": "https://static0.srcdn.com/wordpress/wp-content/uploads/2023/08/robert-pattinson-in-the-batman-part-ii-image.jpg",
       "notes": "The Dark Knight returns",
       "target_timezone": "America/New_York",
       "is_live_event": 0
