@@ -3,14 +3,14 @@
   "updated_at": "2026-02-23",
   "timers": [
     {
-      "id": "gta-vi-global-launch",
-      "name": "GTA VI Global Launch",
-      "target_timestamp": 1795093560000,
-      "category": "GAME",
-      "image_url": "https://gaming-cdn.com/images/products/2462/orig/grand-theft-auto-vi-pc-rockstar-cover.jpg?v=1762511430",
-      "notes": "The most anticipated game release of the decade",
-      "target_timezone": "America/New_York",
-      "is_live_event": 0
+      "id": "coldplay-tour-2026",
+      "name": "Coldplay Stadium Tour 2026",
+      "target_timestamp": 1773532800000,
+      "category": "CONCERT",
+      "image_url": null,
+      "notes": "Lights. Fireworks. Sky full of stars.",
+      "target_timezone": "Europe/London",
+      "is_live_event": 1
     },
     {
       "id": "fifa-world-cup-final-2026",
@@ -18,9 +18,29 @@
       "target_timestamp": 1782604800000,
       "category": "SPORTS",
       "image_url": "https://www.cancunairporttransportations.com/blog/wp-content/uploads/FIFA-world-cup-2026-752x440.webp",
-      "notes": "The biggest match in world football",
+      "notes": "The biggest match in world",
       "target_timezone": "America/New_York",
       "is_live_event": 0
+    },
+    {
+      "id": "gta-vi-global-launch",
+      "name": "GTA VI Global Launch",
+      "target_timestamp": 1795136400000,
+      "category": "GAME",
+      "image_url": "https://gaming-cdn.com/images/products/2462/orig/grand-theft-auto-vi-pc-rockstar-cover.jpg?v=1762511430",
+      "notes": "The most anticipated game release of the decade",
+      "target_timezone": "America/New_York",
+      "is_live_event": 0
+    },
+    {
+      "id": "new-year-2027-global",
+      "name": "New Year 2027",
+      "target_timestamp": 1798761600000,
+      "category": "MILESTONE",
+      "image_url": null,
+      "notes": "Fresh start. New goals.",
+      "target_timezone": "Europe/Bratislava",
+      "is_live_event": 1
     },
     {
       "id": "super-bowl-2027",
@@ -39,16 +59,6 @@
       "category": "PREMIERE",
       "image_url": "https://cdn.marvel.com/content/2x/avengerssecretwars_lob_mas_mob_02.jpg",
       "notes": "Marvel's ultimate crossover event",
-      "target_timezone": "America/New_York",
-      "is_live_event": 0
-    },
-    {
-      "id": "the-batman-part-ii",
-      "name": "The Batman Part II",
-      "target_timestamp": 1822392360000,
-      "category": "PREMIERE",
-      "image_url": "https://static0.srcdn.com/wordpress/wp-content/uploads/2023/08/robert-pattinson-in-the-batman-part-ii-image.jpg",
-      "notes": "The Dark Knight returns",
       "target_timezone": "America/New_York",
       "is_live_event": 0
     },
@@ -73,14 +83,14 @@
       "is_live_event": 1
     },
     {
-      "id": "new-year-2027-global",
-      "name": "New Year 2027",
-      "target_timestamp": 1798761600000,
-      "category": "MILESTONE",
-      "image_url": null,
-      "notes": "Fresh start. New goals.",
-      "target_timezone": "Europe/Bratislava",
-      "is_live_event": 1
+      "id": "the-batman-part-ii",
+      "name": "The Batman Part II",
+      "target_timestamp": 1822392360000,
+      "category": "PREMIERE",
+      "image_url": "https://static0.srcdn.com/wordpress/wp-content/uploads/2023/08/robert-pattinson-in-the-batman-part-ii-image.jpg",
+      "notes": "The Dark Knight returns",
+      "target_timezone": "America/New_York",
+      "is_live_event": 0
     },
     {
       "id": "summer-olympics-2028",
@@ -90,16 +100,6 @@
       "image_url": null,
       "notes": "The world's biggest sporting event",
       "target_timezone": "America/Los_Angeles",
-      "is_live_event": 1
-    },
-    {
-      "id": "coldplay-tour-2026",
-      "name": "Coldplay Stadium Tour 2026",
-      "target_timestamp": 1773532800000,
-      "category": "CONCERT",
-      "image_url": null,
-      "notes": "Lights. Fireworks. Sky full of stars.",
-      "target_timezone": "Europe/London",
       "is_live_event": 1
     }
   ]

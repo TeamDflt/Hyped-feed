@@ -280,22 +280,6 @@
       flex-shrink: 0;
     }
 
-    .reorder-group {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .btn-reorder {
-      background: transparent;
-      border: none;
-      color: var(--text-dim);
-      padding: 2px 5px;
-      font-size: 11px;
-      border-radius: 4px;
-      line-height: 1;
-    }
-    .btn-reorder:hover:not(:disabled) { background: var(--bg-input); color: var(--text-muted); }
 
     /* ── Modal ── */
     #modal-overlay {
@@ -787,9 +771,8 @@ function updateMeta() {
 function renderList() {
   elList.innerHTML = '';
   feedData.timers.forEach((t, i) => {
-    const color  = CAT_COLORS[t.category] ?? '#888';
-    const catBg  = CAT_BG[t.category]    ?? 'rgba(136,136,136,0.15)';
-    const total  = feedData.timers.length;
+    const color   = CAT_COLORS[t.category] ?? '#888';
+    const catBg   = CAT_BG[t.category]    ?? 'rgba(136,136,136,0.15)';
     const display = formatDisplayDate(t.target_timestamp, t.target_timezone);
 
     const card = document.createElement('div');
@@ -810,10 +793,6 @@ function renderList() {
         ${t.notes ? `<div class="card-notes">${escHtml(t.notes)}</div>` : ''}
       </div>
       <div class="card-actions">
-        <div class="reorder-group">
-          <button class="btn-reorder" data-action="up" data-i="${i}" ${i === 0 ? 'disabled' : ''} title="Move up">▲</button>
-          <button class="btn-reorder" data-action="down" data-i="${i}" ${i === total - 1 ? 'disabled' : ''} title="Move down">▼</button>
-        </div>
         <button class="btn-icon" data-action="edit" data-i="${i}" title="Edit">Edit</button>
         <button class="btn-danger" data-action="delete" data-i="${i}" title="Delete">Delete</button>
       </div>
@@ -898,9 +877,11 @@ async function initAutoLoad() {
     if (!handle) return;
     const permission = await handle.queryPermission({ mode: 'readwrite' });
     if (permission === 'granted') {
+      if (feedData) return; // manual open already won the race
       await loadFromHandle(handle);
       showToast('featured.json loaded', 'success');
     } else {
+      if (feedData) return; // manual open already won the race
       // Can't call requestPermission without a user gesture — show resume button instead
       const elResume = document.getElementById('btn-resume');
       elResume.style.display = '';
@@ -961,30 +942,41 @@ function openModal(index) {
   editingIndex = index;
   idManuallyEdited = false;
 
+  // Remove any timezone option that was dynamically injected for a previous edit
+  const baseTzSet = new Set(TIMEZONES);
+  [...fTimezone.options].forEach(opt => { if (!baseTzSet.has(opt.value)) opt.remove(); });
+
   if (index === -1) {
     elModalTitle.textContent = 'Add Timer';
-    fName.value    = '';
-    fId.value      = '';
+    fName.value     = '';
+    fId.value       = '';
     fCategory.value = 'GAME';
-    fDate.value    = '';
-    fTime.value    = '00:00';
+    fDate.value     = '';
+    fTime.value     = '00:00';
     fTimezone.value = 'America/New_York';
-    fNotes.value   = '';
-    fImage.value   = '';
-    fLive.checked  = false;
+    fNotes.value    = '';
+    fImage.value    = '';
+    fLive.checked   = false;
   } else {
     const t = feedData.timers[index];
     const { date, time } = utcMsToLocalParts(t.target_timestamp, t.target_timezone);
     elModalTitle.textContent = 'Edit Timer';
-    fName.value    = t.name;
-    fId.value      = t.id;
+    fName.value     = t.name;
+    fId.value       = t.id;
     fCategory.value = t.category;
-    fDate.value    = date;
-    fTime.value    = time;
-    fTimezone.value = TIMEZONES.includes(t.target_timezone) ? t.target_timezone : TIMEZONES[0];
-    fNotes.value   = t.notes ?? '';
-    fImage.value   = t.image_url ?? '';
-    fLive.checked  = !!t.is_live_event;
+    fDate.value     = date;
+    fTime.value     = time;
+    // Inject timezone into select if it's not in the base list (e.g. Europe/Bratislava)
+    if (!baseTzSet.has(t.target_timezone)) {
+      const opt = document.createElement('option');
+      opt.value = t.target_timezone;
+      opt.textContent = t.target_timezone;
+      fTimezone.appendChild(opt);
+    }
+    fTimezone.value = t.target_timezone;
+    fNotes.value    = t.notes ?? '';
+    fImage.value    = t.image_url ?? '';
+    fLive.checked   = !!t.is_live_event;
     idManuallyEdited = true;
   }
 
@@ -996,7 +988,7 @@ function closeModal() {
   elOverlay.classList.remove('open');
 }
 
-function saveTimer() {
+async function saveTimer() {
   const name = fName.value.trim();
   if (!name) { showToast('Name is required', 'error'); fName.focus(); return; }
 
@@ -1028,9 +1020,11 @@ function saveTimer() {
     feedData.timers[editingIndex] = timer;
   }
 
+  feedData.timers.sort((a, b) => a.target_timestamp - b.target_timestamp);
+
   closeModal();
   render();
-  showToast(editingIndex === -1 ? 'Timer added' : 'Timer updated', 'success');
+  await saveFile();
 }
 
 // ── Event listeners ────────────────────────────────────────────────────────
@@ -1081,16 +1075,6 @@ elList.addEventListener('click', e => {
 
   if (action === 'edit') {
     openModal(i);
-  } else if (action === 'up') {
-    if (i > 0) {
-      [feedData.timers[i - 1], feedData.timers[i]] = [feedData.timers[i], feedData.timers[i - 1]];
-      render();
-    }
-  } else if (action === 'down') {
-    if (i < feedData.timers.length - 1) {
-      [feedData.timers[i], feedData.timers[i + 1]] = [feedData.timers[i + 1], feedData.timers[i]];
-      render();
-    }
   } else if (action === 'delete') {
     if (pendingDeleteIndex === i) {
       feedData.timers.splice(i, 1);
