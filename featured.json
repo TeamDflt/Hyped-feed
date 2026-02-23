@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "updated_at": "2026-02-23",
+  "timers": [
+    {
+      "id": "gta-vi-global-launch",
+      "name": "GTA VI Global Launch",
+      "target_timestamp": 1751328000000,
+      "category": "GAME",
+      "image_url": null,
+      "notes": "The most anticipated game release of the decade",
+      "target_timezone": "America/New_York",
+      "is_live_event": 0
+    },
+    {
+      "id": "fifa-world-cup-final-2026",
+      "name": "World Cup 2026 Final",
+      "target_timestamp": 1782604800000,
+      "category": "SPORTS",
+      "image_url": null,
+      "notes": "The biggest match in world football",
+      "target_timezone": "America/New_York",
+      "is_live_event": 1
+    },
+    {
+      "id": "super-bowl-2027",
+      "name": "Super Bowl LXI",
+      "target_timestamp": 1802217600000,
+      "category": "SPORTS",
+      "image_url": null,
+      "notes": "Halftime show. Commercials. History.",
+      "target_timezone": "America/New_York",
+      "is_live_event": 1
+    },
+    {
+      "id": "avengers-secret-wars",
+      "name": "Avengers: Secret Wars",
+      "target_timestamp": 1810512000000,
+      "category": "PREMIERE",
+      "image_url": null,
+      "notes": "Marvel's ultimate crossover event",
+      "target_timezone": "America/New_York",
+      "is_live_event": 0
+    },
+    {
+      "id": "the-batman-part-ii",
+      "name": "The Batman Part II",
+      "target_timestamp": 1766620800000,
+      "category": "PREMIERE",
+      "image_url": null,
+      "notes": "The Dark Knight returns",
+      "target_timezone": "America/New_York",
+      "is_live_event": 0
+    },
+    {
+      "id": "eurovision-2027-final",
+      "name": "Eurovision 2027 Final",
+      "target_timestamp": 1813363200000,
+      "category": "MUSIC",
+      "image_url": null,
+      "notes": "Europe's wildest music night",
+      "target_timezone": "Europe/Paris",
+      "is_live_event": 1
+    },
+    {
+      "id": "champions-league-final-2027",
+      "name": "Champions League Final 2027",
+      "target_timestamp": 1813881600000,
+      "category": "SPORTS",
+      "image_url": null,
+      "notes": "The biggest club football night",
+      "target_timezone": "Europe/London",
+      "is_live_event": 1
+    },
+    {
+      "id": "new-year-2027-global",
+      "name": "New Year 2027",
+      "target_timestamp": 1798761600000,
+      "category": "MILESTONE",
+      "image_url": null,
+      "notes": "Fresh start. New goals.",
+      "target_timezone": "Europe/Bratislava",
+      "is_live_event": 1
+    },
+    {
+      "id": "summer-olympics-2028",
+      "name": "Olympics LA 2028",
+      "target_timestamp": 1848787200000,
+      "category": "SPORTS",
+      "image_url": null,
+      "notes": "The world's biggest sporting event",
+      "target_timezone": "America/Los_Angeles",
+      "is_live_event": 1
+    },
+    {
+      "id": "coldplay-tour-2026",
+      "name": "Coldplay Stadium Tour 2026",
+      "target_timestamp": 1773532800000,
+      "category": "CONCERT",
+      "image_url": null,
+      "notes": "Lights. Fireworks. Sky full of stars.",
+      "target_timezone": "Europe/London",
+      "is_live_event": 1
+    }
+  ]
+}
