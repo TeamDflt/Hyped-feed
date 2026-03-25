@@ -1,15 +1,35 @@
 {
   "version": 2,
-  "updated_at": "2026-02-23",
+  "updated_at": "2026-03-25",
   "timers": [
     {
-      "id": "coldplay-tour-2026",
-      "name": "Coldplay Stadium Tour 2026",
-      "target_timestamp": 1773532800000,
-      "category": "CONCERT",
+      "id": "f1-monaco-gp-2026",
+      "name": "F1 Monaco Grand Prix 2026",
+      "target_timestamp": 1779642000000,
+      "category": "SPORTS",
       "image_url": null,
-      "notes": "Lights. Fireworks. Sky full of stars.",
-      "target_timezone": "Europe/London",
+      "notes": "The crown jewel of Formula 1 on the streets of Monte Carlo",
+      "target_timezone": "Europe/Monaco",
+      "is_live_event": 1
+    },
+    {
+      "id": "nba-finals-2026-game1",
+      "name": "NBA Finals 2026",
+      "target_timestamp": 1780619400000,
+      "category": "SPORTS",
+      "image_url": null,
+      "notes": "Game 1 of the NBA championship series",
+      "target_timezone": "America/New_York",
+      "is_live_event": 0
+    },
+    {
+      "id": "fifa-world-cup-2026-kickoff",
+      "name": "FIFA World Cup 2026 – Opening Match",
+      "target_timestamp": 1781222400000,
+      "category": "SPORTS",
+      "image_url": "https://www.cancunairporttransportations.com/blog/wp-content/uploads/FIFA-world-cup-2026-752x440.webp",
+      "notes": "The greatest football show on Earth kicks off",
+      "target_timezone": "America/New_York",
       "is_live_event": 1
     },
     {
@@ -23,12 +43,42 @@
       "is_live_event": 0
     },
     {
+      "id": "wimbledon-2026-final",
+      "name": "Wimbledon 2026 Final",
+      "target_timestamp": 1783868400000,
+      "category": "SPORTS",
+      "image_url": null,
+      "notes": "Centre Court. Strawberries. The finest tennis in the world.",
+      "target_timezone": "Europe/London",
+      "is_live_event": 1
+    },
+    {
+      "id": "halloween-2026",
+      "name": "Halloween 2026",
+      "target_timestamp": 1793419200000,
+      "category": "MILESTONE",
+      "image_url": null,
+      "notes": "Costumes, candy, and chaos",
+      "target_timezone": "America/New_York",
+      "is_live_event": 0
+    },
+    {
       "id": "gta-vi-global-launch",
       "name": "GTA VI Global Launch",
       "target_timestamp": 1795136400000,
       "category": "GAME",
       "image_url": "https://gaming-cdn.com/images/products/2462/orig/grand-theft-auto-vi-pc-rockstar-cover.jpg?v=1762511430",
       "notes": "The most anticipated game release of the decade",
+      "target_timezone": "America/New_York",
+      "is_live_event": 0
+    },
+    {
+      "id": "christmas-2026",
+      "name": "Christmas 2026",
+      "target_timestamp": 1798174800000,
+      "category": "MILESTONE",
+      "image_url": null,
+      "notes": "It's the most wonderful time of the year",
       "target_timezone": "America/New_York",
       "is_live_event": 0
     },
@@ -49,6 +99,16 @@
       "category": "SPORTS",
       "image_url": "https://pbs.twimg.com/media/GBQrQfDbAAAH7yf.jpg",
       "notes": "Halftime show. Commercials. History.",
+      "target_timezone": "America/New_York",
+      "is_live_event": 0
+    },
+    {
+      "id": "minecraft-movie-2-2027",
+      "name": "A Minecraft Movie 2 (2027)",
+      "target_timestamp": 1806638400000,
+      "category": "PREMIERE",
+      "image_url": null,
+      "notes": "Back to the Overworld — even bigger this time",
       "target_timezone": "America/New_York",
       "is_live_event": 0
     },
@@ -91,6 +151,26 @@
       "notes": "The Dark Knight returns",
       "target_timezone": "America/New_York",
       "is_live_event": 0
+    },
+    {
+      "id": "avatar-fire-and-ash",
+      "name": "Avatar: Fire and Ash",
+      "target_timestamp": 1829203200000,
+      "category": "PREMIERE",
+      "image_url": null,
+      "notes": "James Cameron returns to Pandora",
+      "target_timezone": "America/Los_Angeles",
+      "is_live_event": 0
+    },
+    {
+      "id": "euro-2028-final",
+      "name": "UEFA Euro 2028 Final",
+      "target_timestamp": 1846357200000,
+      "category": "SPORTS",
+      "image_url": null,
+      "notes": "Europe's top footballing nations battle for glory",
+      "target_timezone": "Europe/London",
+      "is_live_event": 1
     },
     {
       "id": "summer-olympics-2028",
