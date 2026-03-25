@@ -7,7 +7,7 @@
       "name": "F1 Monaco Grand Prix 2026",
       "target_timestamp": 1779642000000,
       "category": "SPORTS",
-      "image_url": null,
+      "image_url": "https://newsgpcdn.vshcdn.net/i/images/4721/2026-explainer-fia-rhs-1_f.jpg",
       "notes": "The crown jewel of Formula 1 on the streets of Monte Carlo",
       "target_timezone": "Europe/Monaco",
       "is_live_event": 1
@@ -34,7 +34,7 @@
     },
     {
       "id": "fifa-world-cup-final-2026",
-      "name": "World Cup 2026 Final",
+      "name": "FIFA World Cup 2026 Final",
       "target_timestamp": 1782604800000,
       "category": "SPORTS",
       "image_url": "https://www.cancunairporttransportations.com/blog/wp-content/uploads/FIFA-world-cup-2026-752x440.webp",
@@ -47,7 +47,7 @@
       "name": "Wimbledon 2026 Final",
       "target_timestamp": 1783868400000,
       "category": "SPORTS",
-      "image_url": null,
+      "image_url": "https://theindianface.com/cdn/shop/articles/0_131b79b3-e247-420f-8cde-dccf2d6496cd.jpg?v=1656343289",
       "notes": "Centre Court. Strawberries. The finest tennis in the world.",
       "target_timezone": "Europe/London",
       "is_live_event": 1
@@ -57,7 +57,7 @@
       "name": "Halloween 2026",
       "target_timestamp": 1793419200000,
       "category": "MILESTONE",
-      "image_url": null,
+      "image_url": "https://res.cloudinary.com/aenetworks/image/upload/c_fill,ar_1.7777777777777777,w_3840,h_2160,g_auto/dpr_auto/f_auto/q_auto:eco/v1/jackolanternfestival?_a=BAVAZGB00",
       "notes": "Costumes, candy, and chaos",
       "target_timezone": "America/New_York",
       "is_live_event": 0
@@ -107,7 +107,7 @@
       "name": "A Minecraft Movie 2 (2027)",
       "target_timestamp": 1806638400000,
       "category": "PREMIERE",
-      "image_url": null,
+      "image_url": "https://static0.srcdn.com/wordpress/wp-content/uploads/2026/01/a-minecraft-movie-jack-black-steve-jason-momoa-garrett-sebastian-eugene-hansen.jpg?w=1600&h=900&fit=crop",
       "notes": "Back to the Overworld — even bigger this time",
       "target_timezone": "America/New_York",
       "is_live_event": 0
